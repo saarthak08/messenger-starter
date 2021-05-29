@@ -10,8 +10,8 @@ import {
   TextField,
 } from "@material-ui/core";
 import { login } from "../store/utils/thunkCreators";
-import AuthPageImage from "./AuthPageImage";
-import useAuthStyles from "./AuthStyles";
+import AuthPageImage from "./Auth/AuthPageImage";
+import useAuthStyles from "./Auth/AuthStyles";
 
 const Login = (props) => {
   const history = useHistory();

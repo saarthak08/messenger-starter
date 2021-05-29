@@ -1,6 +1,6 @@
 import React from "react";
-import backgroundImage from "../images/bg-img.png";
-import chatBubble from "../images/bubble.svg";
+import backgroundImage from "../../images/bg-img.png";
+import chatBubble from "../../images/bubble.svg";
 import {
     Grid,
     Box,
