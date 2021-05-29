@@ -8,62 +8,15 @@ import {
   Button,
   FormControl,
   TextField,
-  makeStyles,
 } from "@material-ui/core";
 import { login } from "../store/utils/thunkCreators";
 import AuthPageImage from "./AuthPageImage";
-
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    direction: "row",
-    height: "100vh"
-  },
-  registerBox: {
-    display: "flex",
-    color: "grey",
-    width: "90%",
-    margin: "2rem 0",
-    justifyContent: "flex-end",
-  },
-  registerText: {
-    marginRight: "2rem",
-    padding: "1rem 0 0 2rem",
-  },
-  registerButton: {
-    fontSize: "1rem",
-    boxShadow: "0px 2px 12px  #c9d5e5",
-    padding: "1rem 2rem",
-  },
-
-  formLogin: {
-    width: "70%",
-    margin: "auto auto",
-  },
-  submitButton: {
-    display: "flex",
-    margin: "2rem auto",
-    padding: "1rem",
-    width: "10rem",
-    fontWeight: "bolder",
-  },
-  formControl: {
-    width: "90%",
-    margin: "1.8rem auto",
-  },
-  label: {
-    fontWeight: "bold",
-    "& .Mui-focused": {
-      color: "#bab8b8",
-      fontSize: "1.3rem",
-      fontWeight: "bold"
-    }
-  },
-}));
+import useAuthStyles from "./AuthStyles";
 
 const Login = (props) => {
   const history = useHistory();
-  const classes = useStyles();
+
+  const classes = useAuthStyles();
   const { user, login } = props;
 
   const handleLogin = async (event) => {
@@ -82,24 +35,22 @@ const Login = (props) => {
     <Grid container className={classes.root}>
       <AuthPageImage />
       <Grid item direction="column" md={7} alignItems="flex-start" container>
-        <Box className={classes.registerBox}>
-          <Typography className={classes.registerText} >Don't have an account?</Typography>
-          <Button className={classes.registerButton} onClick={() => history.push("/register")} color="primary">Create account</Button>
+        <Box className={classes.topBox}>
+          <Typography className={classes.topText} >Don't have an account?</Typography>
+          <Button className={classes.topButton} onClick={() => history.push("/register")} color="primary">Create account</Button>
         </Box>
-        <form onSubmit={handleLogin} className={classes.formLogin}>
-          <Typography variant="h5" style={{ fontWeight: "bold", fontSize: "1.9rem" }}>
+        <form onSubmit={handleLogin} className={classes.form}>
+          <Typography variant="h5" style={{ fontWeight: "bold", fontSize: "1.9rem", margin: "0 0 1rem 0" }}>
             Welcome back!
           </Typography>
 
           <Grid>
-            <FormControl fullWidth className={classes.formControl}>
+            <FormControl margin="normal" fullWidth className={classes.formControl}>
               <TextField
-                aria-label="email"
-                label="E-mail address"
-                name="email"
+                aria-label="username"
+                label="Username"
+                name="username"
                 type="text"
-                className={classes.label}
-                InputLabelProps={{ classes: { root: classes.label } }}
                 required
               />
             </FormControl>
@@ -116,8 +67,6 @@ const Login = (props) => {
                 aria-label="password"
                 type="password"
                 name="password"
-                className={classes.label}
-                InputLabelProps={{ classes: { root: classes.label } }}
                 inputProps={{ minLength: 6 }}
                 required
               />
