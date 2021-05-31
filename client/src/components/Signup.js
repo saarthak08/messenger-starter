@@ -120,7 +120,7 @@ const Signup = (props) => {
               color="primary"
               className={classes.submitButton}
             >
-              Login
+              Create
             </Button>
           </Box>
         </form>
