@@ -10,8 +10,7 @@ import { gotUser, setFetchingStatus } from "../user";
 
 axios.interceptors.request.use(async function (config) {
   const token = await localStorage.getItem("messenger-token");
-  config.headers["x-access-token"] = token;
-
+  config.headers["XSRF-TOKEN"] = token;
   return config;
 });
 
@@ -35,7 +34,9 @@ export const fetchUser = () => async (dispatch) => {
 export const register = (credentials) => async (dispatch) => {
   try {
     const { data } = await axios.post("/auth/register", credentials);
-    await localStorage.setItem("messenger-token", data.token);
+    if (data.csrfToken) {
+      await localStorage.setItem("messenger-token", data.csrfToken);
+    }
     dispatch(gotUser(data));
     socket.emit("go-online", data.id);
   } catch (error) {
@@ -47,7 +48,9 @@ export const register = (credentials) => async (dispatch) => {
 export const login = (credentials) => async (dispatch) => {
   try {
     const { data } = await axios.post("/auth/login", credentials);
-    await localStorage.setItem("messenger-token", data.token);
+    if (data.csrfToken) {
+      await localStorage.setItem("messenger-token", data.csrfToken);
+    }
     dispatch(gotUser(data));
     socket.emit("go-online", data.id);
   } catch (error) {
@@ -93,9 +96,9 @@ const sendMessage = (data, body) => {
 
 // message format to send: {recipientId, text, conversationId}
 // conversationId will be set to null if its a brand new conversation
-export const postMessage = (body) => (dispatch) => {
+export const postMessage = (body) => async (dispatch) => {
   try {
-    const data = saveMessage(body);
+    const data = await saveMessage(body);
 
     if (!body.conversationId) {
       dispatch(addConversation(body.recipientId, data.message));

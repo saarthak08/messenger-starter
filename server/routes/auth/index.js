@@ -1,8 +1,11 @@
 const router = require("express").Router();
 const { User } = require("../../db/models");
 const jwt = require("jsonwebtoken");
+const csrf = require('csurf');
 
-router.post("/register", async (req, res, next) => {
+
+
+router.post("/register", csrf({ cookie: true, ignoreMethods: ['POST'] }), async (req, res, next) => {
   try {
     // expects {username, email, password} in req.body
     const { username, password, email } = req.body;
@@ -26,9 +29,10 @@ router.post("/register", async (req, res, next) => {
       process.env.SESSION_SECRET,
       { expiresIn: 86400 }
     );
+    res.cookie('x-access-token', token, { httpOnly: true, secure: false, maxAge: 3600000 });
     res.json({
       ...user.dataValues,
-      token,
+      csrfToken: req.csrfToken(),
     });
   } catch (error) {
     if (error.name === "SequelizeUniqueConstraintError") {
@@ -39,7 +43,7 @@ router.post("/register", async (req, res, next) => {
   }
 });
 
-router.post("/login", async (req, res, next) => {
+router.post("/login", csrf({ cookie: true, ignoreMethods: ['POST'] }), async (req, res, next) => {
   try {
     // expects username and password in req.body
     const { username, password } = req.body;
@@ -64,9 +68,10 @@ router.post("/login", async (req, res, next) => {
         process.env.SESSION_SECRET,
         { expiresIn: 86400 }
       );
+      res.cookie('x-access-token', token, { httpOnly: true, secure: false, maxAge: 3600000 });
       res.json({
         ...user.dataValues,
-        token,
+        csrfToken: req.csrfToken(),
       });
     }
   } catch (error) {
@@ -75,6 +80,7 @@ router.post("/login", async (req, res, next) => {
 });
 
 router.delete("/logout", (req, res, next) => {
+  res.cookie('x-access-token', "", { httpOnly: true, secure: false, maxAge: 3600000 });
   res.sendStatus(204);
 });
 
