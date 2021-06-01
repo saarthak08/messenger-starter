@@ -39,7 +39,7 @@ const io = require("socket.io")(server, {
 });
 
 io.use((socket, next) => {
-  var token = cookie.parse(socket.handshake.headers.cookie);
+  const token = cookie.parse(socket.handshake.headers.cookie);
 
   if (token['x-access-token']) {
     jwt.verify(token['x-access-token'], process.env.SESSION_SECRET, function (err, decoded) {
@@ -53,25 +53,44 @@ io.use((socket, next) => {
   }
 
 }).on("connection", (socket) => {
+  const token = cookie.parse(socket.handshake.headers.cookie)['x-access-token'];
   socket.on("go-online", (id) => {
+    socket.join(id);
+    const token = cookie.parse(socket.handshake.headers.cookie)['x-access-token'];
     if (!onlineUsers[id]) {
-      onlineUsers[id] = socket.id;
+      onlineUsers[id] = [];
+      onlineUsers[id].push(token);
+    } else {
+      if (!onlineUsers[id].includes(token)) {
+        onlineUsers[id].push(token);
+      }
     }
+
     // send the user who just went online to everyone else who is already online
     socket.broadcast.emit("add-online-user", id);
   });
 
   socket.on("new-message", (data) => {
-    socket.broadcast.to(onlineUsers[data.recipientId]).emit("new-message", {
+    io.to(data.recipientId).emit("new-message", {
       message: data.message,
       sender: data.sender,
     });
   });
 
   socket.on("logout", (id) => {
-    if (onlineUsers[id]) {
+    const token = cookie.parse(socket.handshake.headers.cookie)['x-access-token'];
+
+    socket.leave(id);
+    if (onlineUsers[id] && onlineUsers[id].length == 1) {
       delete onlineUsers.id;
       socket.broadcast.emit("remove-offline-user", id);
+    } else {
+      for (let i = 0; i < onlineUsers[id].length; i++) {
+        if (onlineUsers[id][i] === token) {
+          onlineUsers[id].splice(i, 1);
+          break;
+        }
+      }
     }
   });
 });
