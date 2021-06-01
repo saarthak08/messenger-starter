@@ -11,8 +11,8 @@ export const addMessageToStore = (state, payload) => {
     return [newConvo, ...state];
   }
 
-  var index;
-  var conv;
+  let index;
+  let conv;
   for (let i = 0; i < state.length; i++) {
     if (state[i].id === message.conversationId) {
       const convoCopy = { ...state[i] };
@@ -75,8 +75,8 @@ export const addSearchedUsersToStore = (state, users) => {
 };
 
 export const addNewConvoToStore = (state, recipientId, message) => {
-  var index;
-  var conv;
+  let index;
+  let conv;
   for (let i = 0; i < state.length; i++) {
     if (state[i].otherUser.id === recipientId) {
       const newConvo = { ...state[i] };
