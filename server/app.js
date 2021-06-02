@@ -17,6 +17,15 @@ const csrfProtection = csrf({ cookie: true });
 const { json, urlencoded } = express;
 
 const app = express();
+
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  store: sessionStore,
+  resave: true,
+  saveUninitialized: true
+}));
+
+
 app.use(logger("dev"));
 app.use(json());
 app.use(urlencoded({ extended: false }));
