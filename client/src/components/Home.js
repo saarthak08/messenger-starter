@@ -1,11 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
-import { Grid, CssBaseline, Button, makeStyles } from "@material-ui/core";
+import { Grid, CssBaseline, makeStyles } from "@material-ui/core";
 import { SidebarContainer } from "./Sidebar";
 import { ActiveChat } from "./ActiveChat";
-import { logout, fetchConversations } from "../store/utils/thunkCreators";
-import { clearOnLogout } from "../store/index";
+import { fetchConversations } from "../store/utils/thunkCreators";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -40,17 +39,9 @@ const Home = (props) => {
     fetchConversations();
   }, [fetchConversations]);
 
-  const handleLogout = async () => {
-    await props.logout(props.user.id);
-  };
-
   return (
     !props.user.id ? isLoggedIn ? <Redirect to="/login" /> : <Redirect to="/register" /> :
       <>
-        {/* logout button will eventually be in a dropdown next to username */}
-        <Button className={classes.logout} onClick={handleLogout}>
-          Logout
-        </Button>
         <Grid container component="main" className={classes.root}>
           <CssBaseline />
           <SidebarContainer />
@@ -70,10 +61,6 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    logout: (id) => {
-      dispatch(logout(id));
-      dispatch(clearOnLogout());
-    },
     fetchConversations: () => {
       dispatch(fetchConversations());
     },
