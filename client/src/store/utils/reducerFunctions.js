@@ -94,3 +94,21 @@ export const addNewConvoToStore = (state, recipientId, message) => {
     return state;
   }
 };
+
+export const setMessagesRead = (state, conversationId, messages) => {
+  const newState = [...state];
+  for (let i = 0; i < newState.length; i++) {
+    if (newState[i].id === conversationId) {
+      let x = 0;
+      newState[i].messages = newState[i].messages.map((message) => {
+        if (messages[x] && message.id === messages[x].id) {
+          message = messages[x];
+          x++;
+        }
+        return message;
+      })
+      break;
+    }
+  }
+  return [...newState];
+}

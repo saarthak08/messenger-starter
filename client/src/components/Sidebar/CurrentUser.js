@@ -37,6 +37,7 @@ const CurrentUser = (props) => {
 
   const user = props.user || {};
 
+
   return (
     <Box className={classes.root}>
       <BadgeAvatar photoUrl={user.photoUrl} online={true} />
