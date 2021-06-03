@@ -27,6 +27,7 @@ const ActiveChat = (props) => {
   const { user } = props;
   const conversation = props.conversation || {};
   const [lastReadIndex, setLastReadIndex] = useState(0);
+  var messagesEnd;
 
   useEffect(() => {
     let conversations = props.conversation;
@@ -55,7 +56,9 @@ const ActiveChat = (props) => {
       }
     }
 
-  }, [setLastReadIndex, props, user]);
+    messagesEnd.scrollIntoView({ behavior: "smooth" });
+
+  }, [setLastReadIndex, props, user, messagesEnd]);
 
   return (
     <Box className={classes.root}>
@@ -80,6 +83,9 @@ const ActiveChat = (props) => {
           </Box>
         </>
       )}
+      <div style={{ float: "left", clear: "both" }}
+        ref={(el) => { messagesEnd = el; }}>
+      </div>
     </Box>
   );
 };
