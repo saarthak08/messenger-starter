@@ -81,7 +81,6 @@ io.use((socket, next) => {
   });
 
   socket.on("is-typing", (data) => {
-    console.log(data);
     io.to(data.recipientId).emit('is-typing', data);
   });
 

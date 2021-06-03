@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
-import { Grid, CssBaseline, makeStyles } from "@material-ui/core";
+import { Grid, CssBaseline, makeStyles, Box } from "@material-ui/core";
 import { SidebarContainer } from "./Sidebar";
 import { ActiveChat } from "./ActiveChat";
 import { fetchConversations } from "../store/utils/thunkCreators";
@@ -9,7 +9,38 @@ import { fetchConversations } from "../store/utils/thunkCreators";
 const useStyles = makeStyles(() => ({
   root: {
     height: "97vh",
+    '@media(max-width: 1000px)': {
+      direction: "column",
+    }
   },
+  sidebarContainer: {
+    position: "fixed",
+    width: "20vw",
+    height: "100%",
+    overflowY: "scroll",
+    '@media(max-width: 1000px)': {
+      position: "relative",
+      width: "100%",
+      height: "45%",
+      overflowY: "scroll"
+    }
+
+  },
+  activeChat: {
+    width: "80vw",
+    marginLeft: "20vw",
+    height: "100%",
+    position: "relative",
+    '@media(max-width: 1000px)': {
+      width: "100%",
+      marginLeft: "0",
+      position: "relative",
+      marginTop: 20,
+      height: "100%",
+      overflowY: "scroll"
+    }
+  }
+
 }));
 
 
@@ -42,10 +73,14 @@ const Home = (props) => {
   return (
     !props.user.id ? isLoggedIn ? <Redirect to="/login" /> : <Redirect to="/register" /> :
       <>
-        <Grid container component="main" className={classes.root}>
+        <Grid container component="main" className={classes.root} >
           <CssBaseline />
-          <SidebarContainer />
-          <ActiveChat />
+          <Box className={classes.sidebarContainer}>
+            <SidebarContainer />
+          </Box>
+          <Box className={classes.activeChat}>
+            <ActiveChat />
+          </Box>
         </Grid>
       </>
   );

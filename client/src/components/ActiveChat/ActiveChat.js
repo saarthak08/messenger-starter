@@ -10,15 +10,20 @@ const useStyles = makeStyles(() => ({
   root: {
     display: "flex",
     flexGrow: 8,
+    height: "100vh",
     flexDirection: "column"
   },
   chatContainer: {
     marginLeft: 41,
     marginRight: 41,
+    position: "relative",
     display: "flex",
     flexDirection: "column",
     flexGrow: 1,
     justifyContent: "space-between"
+  },
+  input: {
+    marginTop: "auto",
   }
 }));
 
@@ -76,6 +81,7 @@ const ActiveChat = (props) => {
               userId={user.id}
             />
             <Input
+              className={classes.input}
               otherUser={conversation.otherUser}
               conversationId={conversation.id}
               user={user}
