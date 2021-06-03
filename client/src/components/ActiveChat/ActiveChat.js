@@ -29,25 +29,32 @@ const ActiveChat = (props) => {
   const [lastReadIndex, setLastReadIndex] = useState(0);
 
   useEffect(() => {
-    async function messageRead() {
-      await props.setMessagesRead({
-        conversationId: props.conversation.id,
-        senderId: props.conversation.otherUser.id,
-        recipientId: user.id
-      });
-    }
     let conversations = props.conversation;
-    if (conversations && conversations.otherUser && conversations.id) {
-      messageRead();
-    }
+    let hasUnreadMessage = false;
     if (conversations && conversations.messages) {
       for (let i = conversations.messages.length - 1; i >= 0; i--) {
+        if (!conversations.messages[i].isRead && conversations.messages[i].senderId === conversations.otherUser.id) {
+          hasUnreadMessage = true;
+        }
         if (conversations.messages[i].isRead && conversations.messages[i].senderId === user.id) {
           setLastReadIndex(conversations.messages[i].id);
           break;
         }
       }
     }
+    if (hasUnreadMessage) {
+      async function messageRead() {
+        await props.setMessagesRead({
+          conversationId: props.conversation.id,
+          senderId: props.conversation.otherUser.id,
+          recipientId: user.id
+        });
+      }
+      if (conversations && conversations.otherUser && conversations.id) {
+        messageRead();
+      }
+    }
+
   }, [setLastReadIndex, props, user]);
 
   return (
