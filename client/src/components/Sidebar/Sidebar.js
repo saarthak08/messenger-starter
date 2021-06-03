@@ -39,7 +39,7 @@ const Sidebar = (props) => {
       });
     });
     setCounts(c);
-  }, [setCounts, conversations]);
+  }, [conversations]);
 
   return (
     <Box className={classes.root}>

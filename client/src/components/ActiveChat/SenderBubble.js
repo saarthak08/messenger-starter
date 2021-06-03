@@ -42,11 +42,9 @@ const SenderBubble = (props) => {
   const { time, text, otherUser } = props;
   const [isReadShown, setIsReadShown] = useState(false);
 
-
   const handleClick = (event) => {
     setIsReadShown(!isReadShown);
   };
-
 
   return (
     <Box className={classes.root} onClick={handleClick}>

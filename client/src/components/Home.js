@@ -9,7 +9,7 @@ import { fetchConversations } from "../store/utils/thunkCreators";
 const useStyles = makeStyles(() => ({
   root: {
     height: "97vh",
-    '@media(max-width: 1000px)': {
+    '@media(max-width: 1100px)': {
       direction: "column",
     }
   },
@@ -18,7 +18,7 @@ const useStyles = makeStyles(() => ({
     width: "20vw",
     height: "100%",
     overflowY: "scroll",
-    '@media(max-width: 1000px)': {
+    '@media(max-width: 1100px)': {
       position: "relative",
       width: "100%",
       height: "45%",
@@ -31,7 +31,7 @@ const useStyles = makeStyles(() => ({
     marginLeft: "20vw",
     height: "100%",
     position: "relative",
-    '@media(max-width: 1000px)': {
+    '@media(max-width: 1100px)': {
       width: "100%",
       marginLeft: "0",
       position: "relative",

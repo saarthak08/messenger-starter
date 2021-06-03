@@ -31,7 +31,6 @@ socket.on("connect", () => {
     store.dispatch(readMessages(data.conversationId, data.messages));
   });
   socket.on('is-typing', (data) => {
-    console.log(data);
     store.dispatch(isTyping(data));
   });
 });

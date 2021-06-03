@@ -23,11 +23,12 @@ const Input = (props) => {
 
   const handleChange = async (event) => {
     setText(event.target.value);
-    if (event.target.value.length === 0) {
-      await props.isTyping({ recipientId: props.otherUser.id, senderId: props.user.id, value: false });
-    } else {
-      await props.isTyping({ recipientId: props.otherUser.id, senderId: props.user.id, value: true });
-    }
+    const typingData = {
+      recipientId: props.otherUser.id,
+      senderId: props.user.id,
+      value: event.target.value.length === 0 ? false : true,
+    };
+    props.isTyping(typingData);
   };
 
   const handleSubmit = async (event) => {
