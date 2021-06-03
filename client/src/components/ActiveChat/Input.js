@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FormControl, FilledInput, makeStyles } from "@material-ui/core";
 import { connect } from "react-redux";
-import { postMessage } from "../../store/utils/thunkCreators";
+import { postMessage, isTyping } from "../../store/utils/thunkCreators";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -21,12 +21,18 @@ const Input = (props) => {
   const [text, setText] = useState("");
 
 
-  const handleChange = (event) => {
+  const handleChange = async (event) => {
     setText(event.target.value);
+    if (event.target.value.length === 0) {
+      await props.isTyping({ recipientId: props.otherUser.id, senderId: props.user.id, value: false });
+    } else {
+      await props.isTyping({ recipientId: props.otherUser.id, senderId: props.user.id, value: true });
+    }
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    await props.isTyping({ recipientId: props.otherUser.id, senderId: props.user.id, value: false });
     // add sender user info if posting to a brand new convo, so that the other user will have access to username, profile pic, etc.
     const reqBody = {
       text: event.target.text.value,
@@ -66,6 +72,9 @@ const mapDispatchToProps = (dispatch) => {
     postMessage: (message) => {
       dispatch(postMessage(message));
     },
+    isTyping: (body) => {
+      dispatch(isTyping(body));
+    }
   };
 };
 
