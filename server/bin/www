@@ -88,12 +88,9 @@ io.use((socket, next) => {
       socket.broadcast.emit("remove-offline-user", id);
     } else {
       if (onlineUsers[id]) {
-        for (let i = 0; i < onlineUsers[id].length; i++) {
-          if (onlineUsers[id][i] === token) {
-            onlineUsers[id].splice(i, 1);
-            break;
-          }
-        }
+        onlineUsers[id] = onlineUsers[id].filter((user) => {
+          return user !== token;
+        });
       }
     }
   });

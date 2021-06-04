@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Box, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
@@ -23,23 +23,6 @@ const Sidebar = (props) => {
   const classes = useStyles();
   const conversations = props.conversations;
   const { handleChange, searchTerm } = props;
-  const [counts, setCounts] = useState({});
-
-  useEffect(() => {
-    let c = {};
-    conversations.forEach(conversation => {
-      conversation.messages.forEach((message) => {
-        if (message.isRead !== true && message.senderId === conversation.otherUser.id) {
-          if (!c[conversation.id]) {
-            c[conversation.id] = 1;
-          } else {
-            c[conversation.id] += 1;
-          }
-        }
-      });
-    });
-    setCounts(c);
-  }, [setCounts, conversations]);
 
   return (
     <Box className={classes.root}>
@@ -49,7 +32,7 @@ const Sidebar = (props) => {
       {conversations
         .filter((conversation) => conversation.otherUser.username.includes(searchTerm))
         .map((conversation) => {
-          return <Chat conversation={conversation} key={conversation.otherUser.username} unreadMessagesCount={counts[conversation.id]} />;
+          return <Chat conversation={conversation} key={conversation.otherUser.username} unreadMessagesCount={conversation.unreadMessagesCount} />;
         })}
     </Box>
   );
