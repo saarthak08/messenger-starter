@@ -27,10 +27,10 @@ export const gotConversations = (conversations) => {
   };
 };
 
-export const setNewMessage = (message, sender) => {
+export const setNewMessage = (message, sender, updateUnreadMessagesCount) => {
   return {
     type: SET_MESSAGE,
-    payload: { message, sender: sender || null },
+    payload: { message, sender: sender || null, updateUnreadMessagesCount },
   };
 };
 
@@ -98,7 +98,7 @@ const reducer = (state = [], action) => {
       return addNewConvoToStore(
         state,
         action.payload.recipientId,
-        action.payload.newMessage
+        action.payload.newMessage,
       );
     case MESSAGE_READ:
       return setMessagesRead(state, action.payload.conversationId, action.payload.messages);

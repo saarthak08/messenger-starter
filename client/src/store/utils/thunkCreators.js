@@ -88,11 +88,12 @@ const saveMessage = async (body) => {
   return data;
 };
 
-const sendMessage = (data, body) => {
+const sendMessage = (data, body, updateUnreadMessagesCount) => {
   socket.emit("new-message", {
     message: data.message,
     recipientId: body.recipientId,
     sender: data.sender,
+    updateUnreadMessagesCount: updateUnreadMessagesCount
   });
 };
 
@@ -109,10 +110,10 @@ export const postMessage = (body) => async (dispatch) => {
     if (!body.conversationId) {
       dispatch(addConversation(body.recipientId, data.message));
     } else {
-      dispatch(setNewMessage(data.message));
+      dispatch(setNewMessage(data.message, null, false));
     }
 
-    sendMessage(data, body);
+    sendMessage(data, body, true);
   } catch (error) {
     console.error(error);
   }

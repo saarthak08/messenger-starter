@@ -25,10 +25,10 @@ socket.on("connect", () => {
     store.dispatch(removeOfflineUser(id));
   });
   socket.on("new-message", (data) => {
-    store.dispatch(setNewMessage(data.message, data.sender));
+    store.dispatch(setNewMessage(data.message, data.sender, data.updateUnreadMessagesCount));
   });
   socket.on("messages-read", (data) => {
-    store.dispatch(readMessages(data.conversationId, data.messages));
+    store.dispatch(readMessages(data.conversationId, data.messages, data.updateUnreadMessagesCount));
   });
   socket.on('is-typing', (data) => {
     store.dispatch(isTyping(data));
