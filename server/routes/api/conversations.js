@@ -70,6 +70,21 @@ router.get("/", async (req, res, next) => {
 
       // set properties for notification count and latest message preview
       convoJSON.latestMessageText = convoJSON.messages[convoJSON.messages.length - 1].text;
+
+      let unreadMessagesCount = 0;
+      if (convoJSON.messages) {
+        for (let i = convoJSON.messages.length - 1; i >= 0; i--) {
+          let message = convoJSON.messages[i];
+          if (message.senderId !== userId && !message.isRead) {
+            unreadMessagesCount++;
+          }
+          if (message.senderId !== userId && message.isRead) {
+            break;
+          }
+        }
+      }
+      convoJSON.unreadMessagesCount = unreadMessagesCount;
+
       conversations[i] = convoJSON;
     }
 
@@ -84,56 +99,36 @@ router.get("/", async (req, res, next) => {
 });
 
 router.put("/read", async (req, res, next) => {
-  try {
-    if (!req.user) {
-      return res.sendStatus(401);
-    }
-    const userId = req.user.id;
-    const { senderId, conversationId, recipientId } = req.body;
-    if (userId !== recipientId) {
-      return res.sendStatus(401);
-    }
-
-    const conversation = await Conversation.findConversation(senderId, recipientId);
-
-    if (!conversation) {
-      return res.sendStatus(404);
-    }
-
-    const messages = await Message.findAll({
-      where: {
-        senderId: senderId,
-        conversationId: conversation.id,
-        isRead: false
-      }
-    });
-
-    if (!messages || messages.length == 0) {
-      return res.sendStatus(404);
-    }
-
-    const readTime = Date.now();
-
-    saveMessages = messages.map((message) => {
-      message.isRead = true;
-      message.readTime = readTime;
-      return message;
-    });
-
-    messages.forEach(async (message) => {
-      await Message.update({ isRead: true, readTime: readTime }, {
-        where: {
-          id: message.id
-        }
-      });
-    });
-
-
-    return res.send({ conversationId, messages: saveMessages });
-
-  } catch (error) {
-    next(error);
+  if (!req.user) {
+    return res.sendStatus(401);
   }
+  const userId = req.user.id;
+  const { senderId, conversationId, recipientId } = req.body;
+  if (userId !== recipientId) {
+    return res.sendStatus(401);
+  }
+
+  const conversation = await Conversation.findConversation(senderId, recipientId);
+
+  if (!conversation) {
+    return res.sendStatus(404);
+  }
+
+  const readTime = Date.now();
+
+  let messages = [];
+  await Message.update({ isRead: true, readTime: readTime }, {
+    where: {
+      senderId: senderId,
+      conversationId: conversation.id,
+      isRead: false
+    },
+    returning: true,
+  }).then((res) => {
+    messages = [...res[1]];
+  });
+
+  return res.send({ conversationId, messages: messages });
 });
 
 module.exports = router;

@@ -49,10 +49,9 @@ const Chat = (props) => {
         sidebar={true}
       />
       <ChatContent conversation={props.conversation} />
-      {props.unreadMessagesCount && props.unreadMessagesCount !== 0 && <Box className={classes.circle}>{props.unreadMessagesCount}</Box>}
+      {props.unreadMessagesCount > 0 && <Box className={classes.circle}>{props.unreadMessagesCount}</Box>}
     </Box>
   );
-
 }
 
 const mapDispatchToProps = (dispatch) => {

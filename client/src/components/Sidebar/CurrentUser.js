@@ -53,7 +53,6 @@ const CurrentUser = (props) => {
     await props.logout(props.user.id);
   };
 
-
   return (
     <Box className={classes.root}>
       <BadgeAvatar photoUrl={user.photoUrl} online={true} />
