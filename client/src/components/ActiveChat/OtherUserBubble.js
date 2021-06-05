@@ -16,7 +16,7 @@ const useStyles = makeStyles(() => ({
     fontSize: 11,
     color: "#BECCE2",
     fontWeight: "bold",
-    marginBottom: 5
+    marginTop: 10
   },
   bubble: {
     backgroundImage: "linear-gradient(225deg, #6CC1FF 0%, #3A8DFF 100%)",
@@ -34,6 +34,7 @@ const useStyles = makeStyles(() => ({
 const OtherUserBubble = (props) => {
   const classes = useStyles();
   const { text, time, otherUser } = props;
+
   return (
     <Box className={classes.root}>
       <Avatar alt={otherUser.username} src={otherUser.photoUrl} className={classes.avatar}></Avatar>
