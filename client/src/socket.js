@@ -4,8 +4,11 @@ import {
   setNewMessage,
   removeOfflineUser,
   addOnlineUser,
-  readMessages
+  readMessages,
 } from "./store/conversations";
+import {
+  isTyping
+} from "./store/user";
 
 const socket = io("http://localhost:3001", {
   withCredentials: true
@@ -26,6 +29,9 @@ socket.on("connect", () => {
   });
   socket.on("messages-read", (data) => {
     store.dispatch(readMessages(data.conversationId, data.messages));
+  });
+  socket.on('is-typing', (data) => {
+    store.dispatch(isTyping(data));
   });
 });
 

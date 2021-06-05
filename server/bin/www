@@ -80,6 +80,10 @@ io.use((socket, next) => {
     io.to(data.senderId).emit("messages-read", data);
   });
 
+  socket.on("is-typing", (data) => {
+    io.to(data.recipientId).emit('is-typing', data);
+  });
+
   socket.on("logout", (id) => {
     const token = cookie.parse(socket.handshake.headers.cookie)['x-access-token'];
     socket.leave(id);

@@ -2,6 +2,7 @@
 
 const GET_USER = "GET_USER";
 const SET_FETCHING_STATUS = "SET_FETCHING_STATUS";
+const IS_TYPING = "IS_TYPING";
 
 // ACTION CREATORS
 
@@ -17,6 +18,13 @@ export const setFetchingStatus = (isFetching) => ({
   isFetching
 });
 
+export const isTyping = (isTyping) => {
+  return {
+    type: IS_TYPING,
+    isTyping
+  };
+};
+
 // REDUCER
 
 const reducer = (state = { isFetching: true }, action) => {
@@ -28,6 +36,14 @@ const reducer = (state = { isFetching: true }, action) => {
         ...state,
         isFetching: action.isFetching
       };
+    case IS_TYPING:
+      if (!state.isTyping) {
+        state.isTyping = {};
+      }
+      state.isTyping[action.isTyping.senderId] = action.isTyping;
+      return {
+        ...state
+      }
     default:
       return state;
   }
