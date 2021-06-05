@@ -29,7 +29,7 @@ router.post("/register", csrf({ cookie: true, ignoreMethods: ['POST'] }), async 
       process.env.SESSION_SECRET,
       { expiresIn: 86400 }
     );
-    res.cookie('x-access-token', token, { httpOnly: true, secure: false, maxAge: 86400 });
+    res.cookie('x-access-token', token, { httpOnly: true, secure: false, maxAge: 86400000 });
     res.json({
       ...user.dataValues,
       csrfToken: req.csrfToken(),
@@ -68,7 +68,7 @@ router.post("/login", csrf({ cookie: true, ignoreMethods: ['POST'] }), async (re
         process.env.SESSION_SECRET,
         { expiresIn: 86400 }
       );
-      res.cookie('x-access-token', token, { httpOnly: true, secure: false, maxAge: 86400 });
+      res.cookie('x-access-token', token, { httpOnly: true, secure: false, maxAge: 86400000 });
       res.json({
         ...user.dataValues,
         csrfToken: req.csrfToken(),

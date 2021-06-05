@@ -22,7 +22,7 @@ router.post("/", async (req, res, next) => {
     if (conversation && conversationId) {
       // then => if conversation's id & conversationId passed in request are same or not.
       if (conversation.id === conversationId) {
-        const message = await Message.create({ senderId, text, conversationId });
+        const message = await Message.create({ senderId, text, conversationId, isRead: false, readTime: null });
         return res.json({ message, sender });
       } else {
         return res.sendStatus(401);
@@ -34,7 +34,7 @@ router.post("/", async (req, res, next) => {
 
       // if loggedIn user's id & sender's id passed in request don't match. => Unauthorized.
       if (senderId !== sender.id) {
-        res.sendStatus(401);
+        return res.sendStatus(401);
       }
 
       // create conversation
@@ -51,6 +51,7 @@ router.post("/", async (req, res, next) => {
       senderId,
       text,
       conversationId: conversation.id,
+      isRead: false, readTime: null
     });
     res.json({ message, sender });
   } catch (error) {
